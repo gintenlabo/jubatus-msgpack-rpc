@@ -78,8 +78,8 @@ public:
         void on_connection_closed_error();
         void on_system_error(int system_errno);
 
-	void step_timeout();
-	void step_timeout(std::vector<shared_future>* timedout);
+	bool step_timeout();
+	bool step_timeout(std::vector<shared_future>* timedout);
         void cancel( msgid_t msgid );
         void cancel( msgid_t msgid, object reason );
 

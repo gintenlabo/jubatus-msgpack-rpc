@@ -88,11 +88,11 @@ msgid_t session_impl::next_msgid()
 }
 
 
-void session_impl::step_timeout()
+bool session_impl::step_timeout()
 {
 	LOG_TRACE("step_timeout");
 	std::vector<shared_future> timedout;
-	m_reqtable.step_timeout(&timedout);
+	bool result = m_reqtable.step_timeout(&timedout);
 	if(!timedout.empty()) {
 		for(std::vector<shared_future>::iterator it(timedout.begin()),
 				it_end(timedout.end()); it != it_end; ++it) {
@@ -100,12 +100,13 @@ void session_impl::step_timeout()
 			f->set_result(object(), TIMEOUT_ERROR, auto_zone());
 		}
 	}
+	return result;
 }
 
-void session_impl::step_timeout(std::vector<shared_future>* timedout)
+bool session_impl::step_timeout(std::vector<shared_future>* timedout)
 {
 	LOG_TRACE("step_timeout");
-	m_reqtable.step_timeout(timedout);
+	return m_reqtable.step_timeout(timedout);
 }
 
 void session_impl::cancel( msgid_t msgid ) {

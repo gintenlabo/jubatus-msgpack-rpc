@@ -51,9 +51,12 @@ void reqtable::take_all(std::vector<shared_future>* all)
 	}
 }
 
-void reqtable::step_timeout(std::vector<shared_future>* timedout)
+bool reqtable::step_timeout(std::vector<shared_future>* timedout)
 {
 	mp::pthread_scoped_lock lk(m_mutex);
+	if(m_map.empty()) {
+		return false;  // no futures owned
+	}
 	for(map_t::iterator it(m_map.begin()); it != m_map.end(); ) {
 		shared_future& f = it->second;
 		if(f->step_timeout()) {
@@ -63,6 +66,7 @@ void reqtable::step_timeout(std::vector<shared_future>* timedout)
 			++it;
 		}
 	}
+	return m_map.empty();  // true iff all futures timed out in this step
 }
 
 

@@ -41,7 +41,7 @@ public:
 
 	void take_all(std::vector<shared_future>* all);
 
-	void step_timeout(std::vector<shared_future>* timedout);
+	bool step_timeout(std::vector<shared_future>* timedout);
 
 	size_t size() const;
 
