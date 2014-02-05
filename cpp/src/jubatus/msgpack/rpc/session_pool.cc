@@ -97,7 +97,10 @@ void session_pool_impl::step_timeout()
 			}
 			--e.ttl;
 		}
-		e.session->step_timeout(&timedout);
+		if(e.session->step_timeout(&timedout)) {
+			ref->erase(it++);
+			continue;
+		}
 		++it;
 	}
 	ref.reset();
